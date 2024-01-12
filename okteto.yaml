@@ -2,7 +2,7 @@ name: silly-demo
 build:
   silly-demo:
     context: .
-    image: docker.io/vfarcic/silly-demo
+    image: docker.io/davidmarkgardiner/silly-demo
 deploy:
   - kubectl apply --kustomize kustomize/overlays/stateful
 dev:

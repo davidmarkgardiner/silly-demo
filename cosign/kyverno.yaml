@@ -17,15 +17,15 @@ spec:
             - Deployment
       verifyImages:
       - imageReferences:
-        - "docker.io/vfarcic/silly-demo:*"
-        - "c8n.io/vfarcic/silly-demo:*"
-        - "ghcr.io/vfarcic/silly-demo:*"
+        - "docker.io/davidmarkgardiner/silly-demo:*"
+        - "c8n.io/davidmarkgardiner/silly-demo:*"
+        - "ghcr.io/davidmarkgardiner/silly-demo:*"
         attestors:
         - count: 1
           entries:
           - keys:
               publicKeys: |-
-                -----BEGIN PUBLIC KEY-----
-                MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJUDnUq1zczH77549GQ5F8nhrA10h
-                FjYQvScNBEbIdD3ys1YVyFI6nSb0dXU/+jBfUpeCTYFqW81gInY3bnzULA==
-                -----END PUBLIC KEY-----
+                  -----BEGIN PUBLIC KEY-----
+                  MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUjzwVdouv7Ri2VvWdHJF6gu7ZgQz
+                  k8FbfkK5LhQxiKnl8jqVIvZD8cSHey2Nsg3gZgmiVgDwbdke2NlG66zRiA==
+                  -----END PUBLIC KEY-----
