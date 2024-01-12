@@ -21,8 +21,10 @@ variables:
     - echo "TAG=$TAG"
     - apk add --no-cache docker-cli curl tar openssl sudo bash jq python3 py3-pip
     - apk --update --upgrade add gcc musl-dev libffi-dev openssl-dev make python3-dev
-    - pip3 --no-cache-dir install --upgrade pip
-    - pip3 --no-cache-dir install azure-cli
+    - python3 -m venv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install azure-cli
     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
     - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
