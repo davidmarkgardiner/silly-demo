@@ -12,8 +12,9 @@ import (
 )
 
 var ctx = context.Background()
+
 // var image = "ghcr.io/davidmarkgardiner/silly-demo"
-var image = "registry.gitlab.com/davidmarkgardiner/silly-demo"
+var image = "registry.gitlab.com/davidmarkgardiner/dagger"
 var dev = false
 
 func main() {
