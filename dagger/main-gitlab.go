@@ -74,7 +74,7 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 		if !dev && !signed {
 			cosignCmd := fmt.Sprintf("cosign sign --yes --key env://COSIGN_PRIVATE_KEY %s", imageAddr)
 			if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
-				cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_ && %s", cosignCmd)
+				cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_REGISTRY_PASSWORD && %s", cosignCmd)
 			}
 			output, err := client.Container().
 				From("bitnami/cosign:2.2.1").
