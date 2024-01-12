@@ -1,5 +1,5 @@
-stages:
-  - build
+# stages:
+#   - build
 
 variables:
   TAG: "1.4.$CI_PIPELINE_IID"
