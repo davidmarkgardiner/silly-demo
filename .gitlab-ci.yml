@@ -51,7 +51,7 @@ variables:
     REGISTRY_HOST: $REGISTRY_HOST
     CLIENTID: $CLIENTID
     CLIENTSECRET: $CLIENTSECRET
-    KVPATH: $KVPATH
+    KVPATH: $KVPATH 
 
 build:
   extends: .commit
