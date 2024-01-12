@@ -72,7 +72,7 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 			panic(err)
 		}
 		if !dev && !signed {
-			cosignCmd := fmt.Sprintf("cosign sign --yes --key env://COSIGN_PRIVATE_KEY %s", imageAddr)
+			cosignCmd := fmt.Sprintf("cosign sign --yes --key azurekms://$KVPATH  %s", imageAddr)
 			if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
 				cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_REGISTRY_PASSWORD && %s", cosignCmd)
 			}
@@ -81,6 +81,11 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 				WithEnvVariable("COSIGN_PRIVATE_KEY", os.Getenv("COSIGN_PRIVATE_KEY")).
 				WithEnvVariable("COSIGN_PASSWORD", os.Getenv("COSIGN_PASSWORD")).
 				WithEnvVariable("REGISTRY_PASSWORD", os.Getenv("ACR_REGISTRY_PASSWORD")).
+				WithEnvVariable("TENANTID", os.Getenv("TENANTID")).           // Azure AD tenant ID
+				WithEnvVariable("REGISTRY_HOST", os.Getenv("REGISTRY_HOST")). // Azure Container Registry host
+				WithEnvVariable("CLIENTID", os.Getenv("CLIENTID")).           // Azure AD client ID
+				WithEnvVariable("CLIENTSECRET", os.Getenv("CLIENTSECRET")).   // Azure AD client secret
+				WithEnvVariable("KVPATH", os.Getenv("KVPATH")).               // Azure Key Vault path
 				WithEntrypoint([]string{"sh", "-c"}).
 				WithExec([]string{cosignCmd}).
 				Stderr(ctx)
