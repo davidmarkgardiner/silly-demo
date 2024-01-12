@@ -1,3 +1,12 @@
+
+stages:
+  - build
+
+variables:
+  TAG: "1.4.$CI_PIPELINE_IID"
+
+build-container-image:
+  stage: build
 .docker:
   image: golang:alpine
   services:
@@ -12,31 +21,25 @@
 .dagger:
   extends: [.docker]
   before_script:
+    - echo "TAG=$TAG"
     - apk add docker-cli curl
     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
+
     # - cat $GOOGLE_APPLICATION_CREDENTIALS | docker login -u _json_key --password-stdin https://gcr.io
 build-deploy:
   extends: [.dagger]
   script:
     - dagger run go run dagger/main-gitlab.go
-
-# .docker:
-#   image: golang:1.20-alpine
-#   services:
-#     - docker:${DOCKER_VERSION}-dind
-#   variables:
-#     DOCKER_HOST: tcp://docker:2376
-#     DOCKER_TLS_VERIFY: '1'
-#     DOCKER_TLS_CERTDIR: '/certs'
-#     DOCKER_CERT_PATH: '/certs/client'
-#     DOCKER_DRIVER: overlay2
-#     DOCKER_VERSION: '20.10.16'
-# .dagger:
-#   extends: [.docker]
-#   before_script:
-#     - apk add docker-cli curl
-#     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
-# build:
-#   extends: [.dagger]
-#   script:
-#     - dagger run go run main.go
+    - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
+    - git config --local user.name "gitlab-ci[bot]"
+    - git add .
+    - git commit -m "Release $TAG [skip ci]"
+    - git push origin HEAD:$CI_COMMIT_REF_NAME
+  only:
+    - main
+    - master
+  variables:
+    COSIGN_PRIVATE_KEY: $COSIGN_PRIVATE_KEY
+    COSIGN_PASSWORD: $COSIGN_PASSWORD
+    REGISTRY_PASSWORD: $REGISTRY_PASSWORD
