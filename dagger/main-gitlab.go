@@ -122,7 +122,7 @@ func deploy(client *dagger.Client) error {
 		cmd := exec.Command("sh", "-c", fmt.Sprintf("echo '%s' | kubectl apply --filename -", out))
 		_, err = cmd.CombinedOutput()
 	} else {
-		path := "k8s/app.yaml"
+		path := "k8s-gitlab/app.yaml"
 		err = writeFile(out, path)
 		message = fmt.Sprintf("Output Kubernetes manifests to %s\n", path)
 	}
