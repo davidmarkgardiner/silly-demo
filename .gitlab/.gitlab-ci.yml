@@ -14,29 +14,11 @@
   before_script:
     - apk add docker-cli curl
     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
+    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - az acr login --name dagger    
     # - cat $GOOGLE_APPLICATION_CREDENTIALS | docker login -u _json_key --password-stdin https://gcr.io
 build-deploy:
   extends: [.dagger]
   script:
     - dagger run go run dagger/main-gitlab.go
-
-# .docker:
-#   image: golang:1.20-alpine
-#   services:
-#     - docker:${DOCKER_VERSION}-dind
-#   variables:
-#     DOCKER_HOST: tcp://docker:2376
-#     DOCKER_TLS_VERIFY: '1'
-#     DOCKER_TLS_CERTDIR: '/certs'
-#     DOCKER_CERT_PATH: '/certs/client'
-#     DOCKER_DRIVER: overlay2
-#     DOCKER_VERSION: '20.10.16'
-# .dagger:
-#   extends: [.docker]
-#   before_script:
-#     - apk add docker-cli curl
-#     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
-# build:
-#   extends: [.dagger]
-#   script:
-#     - dagger run go run main.go

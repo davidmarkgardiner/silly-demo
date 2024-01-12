@@ -21,7 +21,10 @@ variables:
     - echo "TAG=$TAG"
     - apk add docker-cli curl
     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
-    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
+    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - az acr login --name dagger  
+    # - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
 .commit:
   extends: [.dagger]
   script:
@@ -38,7 +41,7 @@ variables:
   variables:
     COSIGN_PRIVATE_KEY: $COSIGN_PRIVATE_KEY
     COSIGN_PASSWORD: $COSIGN_PASSWORD
-    REGISTRY_PASSWORD: $REGISTRY_PASSWORD
+    ACR_REGISTRY_PASSWORD: $ACR_REGISTRY_PASSWORD
 
 build:
   extends: .commit

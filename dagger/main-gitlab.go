@@ -14,7 +14,8 @@ import (
 var ctx = context.Background()
 
 // var image = "ghcr.io/davidmarkgardiner/silly-demo"
-var image = "registry.gitlab.com/davidmarkgardiner/dagger"
+// var image = "registry.gitlab.com/davidmarkgardiner/dagger"
+var image = "dagger.azurecr.io/dagger"
 var dev = false
 
 func main() {
@@ -72,14 +73,14 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 		}
 		if !dev && !signed {
 			cosignCmd := fmt.Sprintf("cosign sign --yes --key env://COSIGN_PRIVATE_KEY %s", imageAddr)
-			if len(os.Getenv("REGISTRY_PASSWORD")) > 0 {
-				cosignCmd = fmt.Sprintf("cosign login registry.gitlab.com --username davidmarkgardiner --password $REGISTRY_PASSWORD && %s", cosignCmd)
+			if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
+				cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_ && %s", cosignCmd)
 			}
 			output, err := client.Container().
 				From("bitnami/cosign:2.2.1").
 				WithEnvVariable("COSIGN_PRIVATE_KEY", os.Getenv("COSIGN_PRIVATE_KEY")).
 				WithEnvVariable("COSIGN_PASSWORD", os.Getenv("COSIGN_PASSWORD")).
-				WithEnvVariable("REGISTRY_PASSWORD", os.Getenv("REGISTRY_PASSWORD")).
+				WithEnvVariable("REGISTRY_PASSWORD", os.Getenv("ACR_REGISTRY_PASSWORD")).
 				WithEntrypoint([]string{"sh", "-c"}).
 				WithExec([]string{cosignCmd}).
 				Stderr(ctx)
@@ -148,7 +149,7 @@ func publishTimoni(client *dagger.Client, tag string) {
 		if err != nil {
 			panic(err)
 		}
-		regPass := client.SetSecret("registry-password", os.Getenv("REGISTRY_PASSWORD"))
+		regPass := client.SetSecret("registry-password", os.Getenv("ACR_REGISTRY_PASSWORD"))
 		out, err := client.Container().From("golang:1.21.4").
 			WithExec([]string{"go", "install", "github.com/stefanprodan/timoni/cmd/timoni@latest"}).
 			WithDirectory("timoni", client.Host().Directory("timoni")).
