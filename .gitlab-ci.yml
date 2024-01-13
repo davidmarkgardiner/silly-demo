@@ -7,11 +7,11 @@
 
 variables:
   TAG: "1.4.$CI_PIPELINE_IID"
-  REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
-  CLIENTID: ${{ secrets.CLIENTID }}
-  CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
-  TENANTID: ${{ secrets.TENANTID }}
-  KVPATH: ${{ secrets.KVPATH }}
+  # REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
+  # CLIENTID: ${{ secrets.CLIENTID }}
+  # CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
+  # TENANTID: ${{ secrets.TENANTID }}
+  # KVPATH: ${{ secrets.KVPATH }}
 
 .docker:
   # image: dagger.azurecr.io/golang-azcli:latest
