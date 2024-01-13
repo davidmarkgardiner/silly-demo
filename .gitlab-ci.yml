@@ -16,11 +16,11 @@ variables:
 .docker:
   # image: dagger.azurecr.io/golang-azcli:latest
   image: davidgardiner/golang-azcli:latest
-  before_script:
+  # before_script:
     # - echo "TAG=$TAG"
-    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
-    - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    - az acr login --name dagger  
+    # - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+    # - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    # - az acr login --name dagger  
   services:
     - docker:${DOCKER_VERSION}-dind
   variables:
@@ -33,6 +33,7 @@ variables:
 .dagger:
   extends: [.docker]
   before_script:
+  image: mcr.microsoft.com/azure-cli
     - echo "TAG=$TAG"
     - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
