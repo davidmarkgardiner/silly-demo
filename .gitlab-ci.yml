@@ -14,7 +14,7 @@ variables:
   KVPATH: ${{ secrets.KVPATH }}
 
 .docker:
-  image: dagger.azurecr.io/golang-azcli:katest
+  image: dagger.azurecr.io/golang-azcli:latest
   services:
     - docker:${DOCKER_VERSION}-dind
   variables:
