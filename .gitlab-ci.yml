@@ -5,6 +5,13 @@
 #     - az account set --subscription $AZURE_SUBSCRIPTION_ID
 #     - az acr login --name dagger  
 
+  # image: mcr.microsoft.com/azure-cli
+  # before_script:
+  #   - echo "TAG=$TAG"
+  #   - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+  #   - az account set --subscription $AZURE_SUBSCRIPTION_ID
+  #   - az acr login --name dagger --expose-token
+
 variables:
   TAG: "1.4.$CI_PIPELINE_IID"
   # REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
@@ -12,7 +19,15 @@ variables:
   # CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
   # TENANTID: ${{ secrets.TENANTID }}
   # KVPATH: ${{ secrets.KVPATH }}
-
+.azure-cli:
+  # extends: [.docker]
+  image: mcr.microsoft.com/azure-cli
+  before_script:
+    - echo "TAG=$TAG"
+    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - az acr login --name dagger --expose-token
+    
 .docker:
   # image: dagger.azurecr.io/golang-azcli:latest
   image: davidgardiner/golang-azcli:latest
@@ -30,14 +45,7 @@ variables:
     DOCKER_CERT_PATH: '/certs/client'
     DOCKER_DRIVER: overlay2
     DOCKER_VERSION: '20.10.16'
-.dagger:
-  extends: [.docker]
-  image: mcr.microsoft.com/azure-cli
-  before_script:
-    - echo "TAG=$TAG"
-    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
-    - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    - az acr login --name dagger --expose-token
+
 
     # - apk add --no-cache docker-cli curl tar openssl sudo bash jq python3 py3-pip git
     # - apk --update --upgrade add gcc musl-dev libffi-dev openssl-dev make python3-dev
