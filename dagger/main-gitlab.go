@@ -78,27 +78,28 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 			// if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
 			// 	cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_REGISTRY_PASSWORD && %s", cosignCmd)
 			// }
-			output, err := client.Container().
-				From("bitnami/cosign:2.2.1").
-				WithEnvVariable("COSIGN_PRIVATE_KEY", os.Getenv("COSIGN_PRIVATE_KEY")).
-				WithEnvVariable("COSIGN_PASSWORD", os.Getenv("COSIGN_PASSWORD")).
-				WithEnvVariable("REGISTRY_PASSWORD", os.Getenv("ACR_REGISTRY_PASSWORD")).
-				WithEnvVariable("TENANTID", os.Getenv("TENANTID")).           // Azure AD tenant ID
-				WithEnvVariable("REGISTRY_HOST", os.Getenv("REGISTRY_HOST")). // Azure Container Registry host
-				WithEnvVariable("CLIENTID", os.Getenv("CLIENTID")).           // Azure AD client ID
-				WithEnvVariable("CLIENTSECRET", os.Getenv("CLIENTSECRET")).   // Azure AD client secret
-				WithEnvVariable("KVPATH", os.Getenv("KVPATH")).               // Azure Key Vault path
-				WithEntrypoint([]string{"sh", "-c"}).
-				// WithExec([]string{cosignCmd}).
-				Stderr(ctx)
-			if err != nil {
-				println(output)
-				panic(err)
-			}
-			signed = true
-		}
+		// 	output, err := client.Container().
+		// 		From("bitnami/cosign:2.2.1").
+		// 		WithEnvVariable("COSIGN_PRIVATE_KEY", os.Getenv("COSIGN_PRIVATE_KEY")).
+		// 		WithEnvVariable("COSIGN_PASSWORD", os.Getenv("COSIGN_PASSWORD")).
+		// 		WithEnvVariable("REGISTRY_PASSWORD", os.Getenv("ACR_REGISTRY_PASSWORD")).
+		// 		WithEnvVariable("TENANTID", os.Getenv("TENANTID")).           // Azure AD tenant ID
+		// 		WithEnvVariable("REGISTRY_HOST", os.Getenv("REGISTRY_HOST")). // Azure Container Registry host
+		// 		WithEnvVariable("CLIENTID", os.Getenv("CLIENTID")).           // Azure AD client ID
+		// 		WithEnvVariable("CLIENTSECRET", os.Getenv("CLIENTSECRET")).   // Azure AD client secret
+		// 		WithEnvVariable("KVPATH", os.Getenv("KVPATH")).               // Azure Key Vault path
+		// 		WithEntrypoint([]string{"sh", "-c"}).
+		// 		// WithExec([]string{cosignCmd}).
+		// 		Stderr(ctx)
+		// 	if err != nil {
+		// 		println(output)
+		// 		panic(err)
+		// 	}
+		// 	signed = true
+		// }
 		fmt.Printf("Published image %s\n", imageAddr)
 	}
+}
 }
 
 func deploy(client *dagger.Client) {
