@@ -1,9 +1,9 @@
 # stages:
 #   - build
-before_script:
-    - az login --service-principal -u $DAGGERSP_APPID -p $DAGGERSP_SECRET --tenant $DAGGERSP_TENANT
-    - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    - az acr login --name dagger  
+# before_script:
+#     - az login --service-principal -u $DAGGERSP_APPID -p $DAGGERSP_SECRET --tenant $DAGGERSP_TENANT
+#     - az account set --subscription $AZURE_SUBSCRIPTION_ID
+#     - az acr login --name dagger  
 
 variables:
   TAG: "1.4.$CI_PIPELINE_IID"
@@ -15,6 +15,11 @@ variables:
 
 .docker:
   image: dagger.azurecr.io/golang-azcli:latest
+  before_script:
+    # - echo "TAG=$TAG"
+    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - az acr login --name dagger  
   services:
     - docker:${DOCKER_VERSION}-dind
   variables:
