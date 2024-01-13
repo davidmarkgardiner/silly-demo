@@ -53,7 +53,7 @@ variables:
 
     # - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
 .commit:
-  extends: [.dagger]
+  extends: [.docker]
   script:
     - dagger run go run dagger/main-gitlab.go
     # - apk add --no-cache curl
