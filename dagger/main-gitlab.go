@@ -72,11 +72,12 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 			panic(err)
 		}
 		if !dev && !signed {
+			fmt.Println("cosign is done it gilab ci yaml")
 			// cosignCmd := fmt.Sprintf("cosign sign --yes --key $KVPATH  %s", imageAddr)
 			// // azurekms://cosign121.vault.azure.net/cosignkey
 			// if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
 			// 	cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_REGISTRY_PASSWORD && %s", cosignCmd)
-			}
+			// }
 			output, err := client.Container().
 				From("bitnami/cosign:2.2.1").
 				WithEnvVariable("COSIGN_PRIVATE_KEY", os.Getenv("COSIGN_PRIVATE_KEY")).
