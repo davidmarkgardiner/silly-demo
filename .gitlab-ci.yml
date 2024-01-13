@@ -3,6 +3,11 @@
 
 variables:
   TAG: "1.4.$CI_PIPELINE_IID"
+  REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
+  CLIENTID: ${{ secrets.CLIENTID }}
+  CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
+  TENANTID: ${{ secrets.TENANTID }}
+  KVPATH: ${{ secrets.KVPATH }}
 
 .docker:
   image: golang:alpine
@@ -34,6 +39,12 @@ variables:
   extends: [.dagger]
   script:
     - dagger run go run dagger/main-gitlab.go
+    - apk add --no-cache curl
+    - curl -LO https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-linux-amd64
+    - chmod +x cosign-linux-amd64
+    - mv cosign-linux-amd64 /usr/local/bin/cosign
+    - cosign sign -a commit=$CI_COMMIT_SHA -key $KVPATH $REGISTRY_HOST/dagger:latest
+
     - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
     - git config --local user.name "gitlab-ci[bot]"
     - git add .

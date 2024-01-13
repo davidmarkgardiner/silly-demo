@@ -72,10 +72,10 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 			panic(err)
 		}
 		if !dev && !signed {
-			cosignCmd := fmt.Sprintf("cosign sign --yes --key $KVPATH  %s", imageAddr)
-			// azurekms://cosign121.vault.azure.net/cosignkey
-			if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
-				cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_REGISTRY_PASSWORD && %s", cosignCmd)
+			// cosignCmd := fmt.Sprintf("cosign sign --yes --key $KVPATH  %s", imageAddr)
+			// // azurekms://cosign121.vault.azure.net/cosignkey
+			// if len(os.Getenv("ACR_REGISTRY_PASSWORD")) > 0 {
+			// 	cosignCmd = fmt.Sprintf("cosign login dagger.azurecr.io --username dagger --password $ACR_REGISTRY_PASSWORD && %s", cosignCmd)
 			}
 			output, err := client.Container().
 				From("bitnami/cosign:2.2.1").
@@ -88,7 +88,7 @@ func publishImages(client *dagger.Client, dockerfile string, tags []string) {
 				WithEnvVariable("CLIENTSECRET", os.Getenv("CLIENTSECRET")).   // Azure AD client secret
 				WithEnvVariable("KVPATH", os.Getenv("KVPATH")).               // Azure Key Vault path
 				WithEntrypoint([]string{"sh", "-c"}).
-				WithExec([]string{cosignCmd}).
+				// WithExec([]string{cosignCmd}).
 				Stderr(ctx)
 			if err != nil {
 				println(output)
