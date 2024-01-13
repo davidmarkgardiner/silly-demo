@@ -162,7 +162,7 @@ func publishTimoni(client *dagger.Client, tag string) {
 			WithExec([]string{"go", "install", "github.com/stefanprodan/timoni/cmd/timoni@latest"}).
 			WithDirectory("timoni", client.Host().Directory("timoni")).
 			WithSecretVariable("REGISTRY_PASSWORD", regPass).
-			WithExec([]string{"sh", "-c", fmt.Sprintf(`timoni mod push timoni oci://%s-package --version %s --creds davidmarkgardiner:$REGISTRY_PASSWORD`, image, tag)}).
+			WithExec([]string{"sh", "-c", fmt.Sprintf(`timoni mod push timoni oci://%s-package --version %s --creds dagger:$REGISTRY_PASSWORD`, image, tag)}).
 			Stdout(ctx)
 		if err != nil {
 			println(out)
