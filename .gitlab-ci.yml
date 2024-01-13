@@ -24,7 +24,7 @@ variables:
   extends: [.docker]
   before_script:
     - echo "TAG=$TAG"
-    - apk add --no-cache docker-cli curl tar openssl sudo bash jq python3 py3-pip
+    - apk add --no-cache docker-cli curl tar openssl sudo bash jq python3 py3-pip git
     - apk --update --upgrade add gcc musl-dev libffi-dev openssl-dev make python3-dev
     - python3 -m venv venv
     - source venv/bin/activate
