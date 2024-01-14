@@ -15,7 +15,8 @@ var ctx = context.Background()
 
 // var image = "ghcr.io/davidmarkgardiner/silly-demo"
 // var image = "registry.gitlab.com/davidmarkgardiner/dagger"
-var image = "dagger.azurecr.io/dagger"
+// var image = "dagger.azurecr.io/dagger"
+var image = "davidgardiner/dagger"
 var dev = false
 
 func main() {
@@ -157,12 +158,13 @@ func publishTimoni(client *dagger.Client, tag string) {
 		if err != nil {
 			panic(err)
 		}
-		regPass := client.SetSecret("registry-password", os.Getenv("ACR_REGISTRY_PASSWORD"))
+		// regPass := client.SetSecret("registry-password", os.Getenv("ACR_REGISTRY_PASSWORD"))
+		regPass := client.SetSecret("registry-password", os.Getenv("DOCKERHUB_TOKEN"))
 		out, err := client.Container().From("golang:1.21.4").
 			WithExec([]string{"go", "install", "github.com/stefanprodan/timoni/cmd/timoni@latest"}).
 			WithDirectory("timoni", client.Host().Directory("timoni")).
-			WithSecretVariable("REGISTRY_PASSWORD", regPass).
-			WithExec([]string{"sh", "-c", fmt.Sprintf(`timoni mod push timoni oci://%s-package --version %s --creds dagger:$REGISTRY_PASSWORD`, image, tag)}).
+			WithSecretVariable("DOCKERHUB_TOKEN", regPass).
+			WithExec([]string{"sh", "-c", fmt.Sprintf(`timoni mod push timoni oci://%s-package --version %s --creds davidgardiner:$DOCKERHUB_TOKEN`, image, tag)}).
 			Stdout(ctx)
 		if err != nil {
 			println(out)

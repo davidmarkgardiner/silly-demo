@@ -23,6 +23,7 @@ variables:
   DAGGER_APPID: $DAGGER_APPID
   DAGGER_SECRET: $DAGGER_SECRET
   DAGGER_TENANT: $DAGGER_TENANT
+  DOCKERHUB_TOKEN: $DOCKERHUB_TOKEN
   # REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
   # CLIENTID: ${{ secrets.CLIENTID }}
   # CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
@@ -35,7 +36,8 @@ variables:
     - echo "TAG=$TAG"
     - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    - az acr login --name dagger --expose-token
+    # - az acr login --name dagger --expose-token
+    - docker login  -u davidgardiner -p ${DOCKERHUB_TOKEN}
     
 .docker:
   # image: dagger.azurecr.io/goland-azcli:0.1
