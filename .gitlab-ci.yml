@@ -87,13 +87,13 @@ variables:
     - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
     - cosign sign -a commit=$CI_COMMIT_SHA -key $KVPATH davidgardiner/dagger:$TAG
-    # - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
-    # - git config --local user.name "gitlab-ci[bot]"
+    - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
+    - git config --local user.name "gitlab-ci[bot]"
     - git add .
     - git commit -m "Release $TAG [skip ci]"
-    # - gti remote add master https://gitlab.com/davidgardiner/dagger.git
+    - git remote add gitlab "https://CI_JOB_TOKEN:$CI_JOB_TOKEN@gitlab.com/davidmarkgardiner/dagger.git"
     - git remote -v
-    - git push origin HEAD:$CI_COMMIT_REF_NAME
+    - git push gitlab HEAD:$CI_COMMIT_REF_NAME
     
   only:
     - main
