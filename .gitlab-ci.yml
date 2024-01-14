@@ -19,23 +19,27 @@ variables:
   # CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
   # TENANTID: ${{ secrets.TENANTID }}
   # KVPATH: ${{ secrets.KVPATH }}
-.azure-cli:
+# .azure-cli:
   # extends: [.docker]
-  image: mcr.microsoft.com/azure-cli
+  # image: mcr.microsoft.com/azure-cli
+  # before_script:
+  #   - echo "TAG=$TAG"
+  #   - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+  #   - az account set --subscription $AZURE_SUBSCRIPTION_ID
+  #   - az acr login --name dagger --expose-token
+    
+.docker:
+  # image: dagger.azurecr.io/golang-azcli:latest
+  image: dagger.azurecr.io/goland-azcli:0.1
   before_script:
     - echo "TAG=$TAG"
     - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    - az acr login --name dagger --expose-token
-    
-.docker:
-  # image: dagger.azurecr.io/golang-azcli:latest
-  image: davidgardiner/golang-azcli:latest
-  # before_script:
-    # - echo "TAG=$TAG"
-    # - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
-    # - az account set --subscription $AZURE_SUBSCRIPTION_ID
-    # - az acr login --name dagger  
+    - az acr login --name dagger  
+    - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
+    - curl -LO https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-linux-amd64
+    - chmod +x cosign-linux-amd64
+    - mv cosign-linux-amd64 /usr/local/bin/cosign
   services:
     - docker:${DOCKER_VERSION}-dind
   variables:
