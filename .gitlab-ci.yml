@@ -60,16 +60,7 @@ variables:
     DOCKER_DRIVER: overlay2
     DOCKER_VERSION: '20.10.16'
 
-    # - apk add --no-cache docker-cli curl tar openssl sudo bash jq python3 py3-pip git
-    # - apk --update --upgrade add gcc musl-dev libffi-dev openssl-dev make python3-dev
-    # - python3 -m venv venv
-    # - source venv/bin/activate
-    # - pip install --upgrade pip
-    # - pip install azure-cli
-    # - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
-    # - curl -LO https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-linux-amd64
-    # - chmod +x cosign-linux-amd64
-    # - mv cosign-linux-amd64 /usr/local/bin/cosign
+
 
 
     # - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
@@ -77,11 +68,16 @@ variables:
   # image: dagger.azurecr.io/goland-azcli:0.1
   extends: [.docker]
   script:
+    - apk add --no-cache docker-cli curl tar openssl sudo bash jq python3 py3-pip git
+    - apk --update --upgrade add gcc musl-dev libffi-dev openssl-dev make python3-dev
+    - python3 -m venv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install azure-cli
     - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
     - curl -LO https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-linux-amd64
     - chmod +x cosign-linux-amd64
     - mv cosign-linux-amd64 /usr/local/bin/cosign
-    # - apk add --no-cache curl
     - dagger run go run dagger/main-gitlab.go
     - cosign sign -a commit=$CI_COMMIT_SHA -key $KVPATH $REGISTRY_HOST/dagger:$TAG
     - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
