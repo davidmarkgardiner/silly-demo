@@ -83,7 +83,9 @@ variables:
     - mv cosign-linux-amd64 /usr/local/bin/cosign
     - docker login  -u davidgardiner -p ${DOCKERHUB_TOKEN}
     - dagger run go run dagger/main-gitlab.go
-    - cosign sign -a commit=$CI_COMMIT_SHA -key $KVPATH $REGISTRY_HOST/dagger:$TAG
+    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - cosign sign -a commit=$CI_COMMIT_SHA -key $KVPATH davidgardiner/dagger:$TAG
     - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
     - git config --local user.name "gitlab-ci[bot]"
     - git add .
