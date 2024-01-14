@@ -39,7 +39,7 @@ variables:
     
 .docker:
   # image: dagger.azurecr.io/golang-azcli:latest
-  image: dagger.azurecr.io/goland-azcli:0.1
+  # image: dagger.azurecr.io/goland-azcli:0.1
   before_script:
     - echo "TAG=$TAG"
     # - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
@@ -47,10 +47,6 @@ variables:
     - docker login dagger.azurecr.io -u xdagger -p myPassword $ACR_REGISTRY_PASSWORD
     - az account set --subscription $AZURE_SUBSCRIPTION_ID
     # - az acr login --name dagger --username dagger --password $ACR_REGISTRY_PASSWORD --expose-token
-    - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
-    - curl -LO https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-linux-amd64
-    - chmod +x cosign-linux-amd64
-    - mv cosign-linux-amd64 /usr/local/bin/cosign
   services:
     - docker:${DOCKER_VERSION}-dind
   variables:
@@ -75,9 +71,14 @@ variables:
 
     # - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
 .commit:
+  image: dagger.azurecr.io/goland-azcli:0.1
   extends: [.docker]
   script:
     - dagger run go run dagger/main-gitlab.go
+    - cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
+    - curl -LO https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-linux-amd64
+    - chmod +x cosign-linux-amd64
+    - mv cosign-linux-amd64 /usr/local/bin/cosign
     # - apk add --no-cache curl
     - cosign sign -a commit=$CI_COMMIT_SHA -key $KVPATH $REGISTRY_HOST/dagger:$TAG
     - git config --local user.email "gitlab-ci[bot]@users.noreply.gitlab.com"
