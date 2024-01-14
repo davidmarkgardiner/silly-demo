@@ -91,7 +91,7 @@ variables:
     - git config --local user.name "gitlab-ci[bot]"
     - git add .
     - git commit -m "Release $TAG [skip ci]"
-    - git remote add gitlab "https://CI_JOB_TOKEN:$CI_JOB_TOKEN@gitlab.com/davidmarkgardiner/dagger.git"
+    - git remote add gitlab "https://CI_JOB_TOKEN2:$CI_JOB_TOKEN2@gitlab.com/davidmarkgardiner/dagger.git"
     - git remote -v
     - git push gitlab HEAD:$CI_COMMIT_REF_NAME
     
