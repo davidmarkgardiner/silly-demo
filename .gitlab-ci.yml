@@ -38,7 +38,8 @@ variables:
     - az acr login --name dagger --expose-token
     
 .docker:
-  image: dagger.azurecr.io/goland-azcli:0.1
+  # image: dagger.azurecr.io/goland-azcli:0.1
+  image: golang:alpine
   extends: [.azure-cli]
   # image: dagger.azurecr.io/golang-azcli:latest
   # image: dagger.azurecr.io/goland-azcli:0.1
