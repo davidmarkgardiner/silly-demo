@@ -194,3 +194,20 @@ func updateHelm(client *dagger.Client, tag string) {
 	}
 	fmt.Println("Updated Helm files")
 }
+
+func updatek8s(client *dagger.Client, tag string) {
+    _, err := client.Container().From("mikefarah/yq:4.35.2").
+        WithDirectory("k8s", client.Host().Directory("k8s"), dagger.ContainerWithDirectoryOpts{
+            Include: []string{"app.yaml"},
+        }).
+        WithExec(
+            []string{"--inplace", fmt.Sprintf(".spec.template.spec.containers[0].image = \"%s\"", tag), "k8s/app.yaml"},
+            dagger.ContainerWithExecOpts{InsecureRootCapabilities: true},
+        ).
+        Directory("k8s").
+        Export(ctx, "k8s")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println("Updated Kubernetes files")
+}
