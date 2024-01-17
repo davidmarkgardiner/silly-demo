@@ -1,6 +1,6 @@
 image:
   repository: davidgardiner/dagger
-  tag: 1.4.50
+  tag: 1.4.52
 ingress:
   host: devopstoolkitseries.com
 db:
