@@ -1,0 +1,5 @@
+namespace: ${namespace}
+env: ${env}
+region: ${region}
+subdomain: ${subdomain}
+domain: ${domain}

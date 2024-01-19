@@ -4,3 +4,6 @@
 /silly-demo
 /traces.json
 /silly-demo-helm*
+*.kube*
+*.ps1
+ingress/deploy.ps1

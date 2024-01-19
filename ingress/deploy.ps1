@@ -2,6 +2,10 @@
 RG="rg-aks-we"
 AKS="aks-cluster"
 
+
+RG="aks-istio"
+AKS="istio"
+
 az extension update --name aks-preview
 az feature show --namespace "Microsoft.ContainerService" --name "AzureServiceMeshPreview"
 az provider register --namespace Microsoft.ContainerService
@@ -55,7 +59,7 @@ kubectl get services
 kubectl get pods
 
 
-az aks mesh enable-ingress-gateway --resource-group $RG --name $AKS --ingress-gateway-type internal
+az aks mesh enable-ingress-gateway --resource-group $RG --name $AKS --ingress-gateway-type external
 kubectl get svc aks-istio-ingressgateway-internal -n aks-istio-ingress
 
 kubectl apply -f - <<EOF
