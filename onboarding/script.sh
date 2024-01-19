@@ -19,6 +19,14 @@ namespace=$(jq -r '.namespace' $JSON_FILE)
 env=$(jq -r '.env' $JSON_FILE)
 region=$(jq -r '.region' $JSON_FILE)
 
+# if region is westeuprot the $clustername == cluster-westeurope if region eastus2 then %clustername == cluster-eastus2
+if [ "$region" == "westeurope" ]; then
+  clustername="cluster-westeurope"
+fi
+if [ "$region" == "eastus2" ]; then
+  clustername="cluster-eastus2"
+fi
+
 # If subdomain and domain are empty, use default values
 if [ -z "$subdomain" ] || [ "$subdomain" == "null" ]; then
   subdomain="${namespace}-${env}"
